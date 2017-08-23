@@ -10,6 +10,7 @@ public class Race {
     Race(String raceName, int maxRunners) {
         name = raceName;
         totalRunners = maxRunners;
+        myrunners = new Runner[totalRunners];
     }
  
     
@@ -18,8 +19,15 @@ public class Race {
     // note: make sure this works even if less than max number of participants ran the race
     //         e.g., 4 runners registered for a 10 person race
     public Runner getFastestRunner() {
-        // implement this method
-        return null;
+        Runner fastest = myrunners[0];
+        double fTime = fastest.getResult();
+        for (Runner r : myrunners) {
+            if(r.getResult()<fTime) {
+                fastest = r;
+                fTime = r.getResult();
+            }
+        }
+        return fastest;
     }
     
     // Simulate a race and set the results for each participant
@@ -41,20 +49,30 @@ public class Race {
     }
     public void addRunner(Runner newRunner) {
         if(numRunners<totalRunners) {
-            
+            myrunners[numRunners]=newRunner;
+            numRunners = numRunners+1;
+            newRunner.register();
         }
     }
     
     public void printParticipants() {
-        
+        for (Runner r : myrunners) {
+            System.out.println(r.getName());
+        }
     }
     
     public void printResults() {
-        
+        for (Runner r : myrunners) {
+            System.out.println(r.getName() + ": " + r.getResult());
+        }
     }
     
     public double getAverageResult() {
-        return 0;
+        double ave = 0;
+        for (Runner r : myrunners) {
+            ave = ave+r.getResult();
+        }
+        return ave/myrunners.length;
     }
     public static void main(String[] args) {
         // create a race with a maximum of 4 participants
