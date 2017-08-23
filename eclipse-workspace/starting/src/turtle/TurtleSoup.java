@@ -15,7 +15,13 @@ public class TurtleSoup {
      * @param sideLength length of each side
      */
     public static void drawSquare(Turtle turtle, int sideLength) {
-        throw new RuntimeException("implement me!");
+        turtle.forward(sideLength);
+        turtle.turn(90);
+        turtle.forward(sideLength);
+        turtle.turn(90);
+        turtle.forward(sideLength);
+        turtle.turn(90);
+        turtle.forward(sideLength);
     }
 
     /**
@@ -28,7 +34,7 @@ public class TurtleSoup {
      * @return angle in degrees, where 0 <= angle < 360
      */
     public static double calculateRegularPolygonAngle(int sides) {
-        throw new RuntimeException("implement me!");
+        return (sides-2)*180.0/sides;
     }
 
     /**
@@ -42,7 +48,8 @@ public class TurtleSoup {
      * @return the integer number of sides
      */
     public static int calculatePolygonSidesFromAngle(double angle) {
-        throw new RuntimeException("implement me!");
+        long ans = java.lang.Math.round(360.0/(180.0-angle));
+        return (int) ans;
     }
 
     /**
@@ -55,7 +62,11 @@ public class TurtleSoup {
      * @param sideLength length of each side
      */
     public static void drawRegularPolygon(Turtle turtle, int sides, int sideLength) {
-        throw new RuntimeException("implement me!");
+        double angle = calculateRegularPolygonAngle(sides);
+        for(int s = 0; s<sides; s=s+1) {
+            turtle.forward(sideLength);
+            turtle.turn(angle);
+        }
     }
 
     /**
@@ -79,7 +90,21 @@ public class TurtleSoup {
      */
     public static double calculateHeadingToPoint(double currentHeading, int currentX, int currentY,
                                                  int targetX, int targetY) {
-        throw new RuntimeException("implement me!");
+        //Calculate difference between current and desired location
+        double deltaX = targetX-currentX;
+        double deltaY = targetY-currentY;
+        //Calculate desired heading relative to x-axis (positive x-axis = 0) in radians
+        double dHeadingRadians = java.lang.Math.atan2(deltaY, deltaX);
+        //Convert to degrees and reference positive y-axis as 0, clockwise positive
+        double dHeadingDegrees = -java.lang.Math.toDegrees(dHeadingRadians)+90;
+        //System.out.println(dHeadingDegrees);
+        //Find difference between current heading and desired
+        double deltaHeading = dHeadingDegrees-currentHeading;
+        //Make right turns only
+        if(deltaHeading<0) {
+            deltaHeading = deltaHeading+360;
+        }
+        return deltaHeading;
     }
 
     /**
@@ -96,7 +121,15 @@ public class TurtleSoup {
      * @return list of heading adjustments between points, of size (# of points) - 1.
      */
     public static List<Double> calculateHeadings(List<Integer> xCoords, List<Integer> yCoords) {
-        throw new RuntimeException("implement me!");
+        double currentHeading = 0;
+        double deltaHeading;
+        List<Double> headings = new ArrayList<Double>();
+        for(int point = 0; (point<xCoords.size()-1);point=point+1) {
+            deltaHeading = calculateHeadingToPoint(currentHeading, xCoords.get(point), yCoords.get(point),xCoords.get(point+1),yCoords.get(point+1));
+            headings.add(deltaHeading);
+            currentHeading = currentHeading+deltaHeading;
+        }
+        return headings;
     }
 
     /**
